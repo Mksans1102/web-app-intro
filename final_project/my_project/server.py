@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response, HTTPException
 from fastapi.responses import HTMLResponse, PlainTextResponse
 from pydantic import BaseModel
 from typing import List, Optional
@@ -66,6 +66,29 @@ def create_todo(item: TodoItem):
         done=item.done,
     )
 
+@app.delete("/data/{item_id}", status_code=204)
+def delete_todo(item_id: int):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM data WHERE id = ?", (item_id,))
+    conn.commit()
+    conn.close()
+    return Response(status_code=204)
+
+@app.patch("/data/{item_id}", response_model=TodoItem)
+def update_todo(item_id: int, item: TodoItem):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        "UPDATE data SET task = ?, done = ? WHERE id = ?",
+        (item.task, item.done, item_id),
+    )
+    conn.commit()
+    updated = cursor.execute("SELECT * FROM data WHERE id = ?", (item_id,)).fetchone()
+    conn.close()
+    if updated is None:
+        raise HTTPException(status_code=404, detail="Item not found")
+    return TodoItem(**dict(updated))
 
 # ここから下は書き換えない
 @app.get("/", response_class=HTMLResponse)

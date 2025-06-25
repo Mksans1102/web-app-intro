@@ -1,13 +1,14 @@
 body {
     font-family: sans-serif;
     margin: 20px;
-    background-color: #f4f4f4;
+    /* 縦方向（上から下）のグラデーションに変更 */
+    background: linear-gradient(to bottom, #ffd5d5 0%, #ee8320 100%);
     color: #333;
 }
 
 h1,
 h2 {
-    color: #0056b3;
+    color: #ff1111;
 }
 
 ul {
@@ -16,7 +17,7 @@ ul {
 }
 
 li {
-    background-color: #fff;
+    background-color: #ebe8e8;
     margin-bottom: 10px;
     padding: 10px;
     border-radius: 5px;
@@ -42,12 +43,12 @@ input[type="text"] {
     /* padding と border を考慮 */
     padding: 10px;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #0e0e0e;
     border-radius: 4px;
 }
 
 button {
-    background-color: #0056b3;
+    background-color: #ff684d;
     color: white;
     padding: 10px 15px;
     border: none;
@@ -57,5 +58,62 @@ button {
 }
 
 button:hover {
-    background-color: #004494;
+    background-color: #ff684d;
+}
+
+/* タスクテキストにホバー時の揺れアニメーションを追加 */
+.task-text {
+    display: inline-block;
+    transition: transform 0.1s;
+}
+
+.task-text:hover {
+    animation: shake-vertical 0.8s;
+    animation-iteration-count: 1;
+}
+
+@keyframes shake-vertical {
+    0% {
+        transform: translateY(0);
+    }
+
+    10% {
+        transform: translateY(-4px);
+    }
+
+    20% {
+        transform: translateY(4px);
+    }
+
+    30% {
+        transform: translateY(-8px);
+    }
+
+    40% {
+        transform: translateY(8px);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+
+    60% {
+        transform: translateY(8px);
+    }
+
+    70% {
+        transform: translateY(-4px);
+    }
+
+    80% {
+        transform: translateY(4px);
+    }
+
+    90% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
 }
