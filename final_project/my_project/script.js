@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     addTodoForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         const task = taskInput.value;
-        const due = dueInput.value; 
+        const due = dueInput.value;
         try {
             const response = await fetch('/data', {
                 method: 'POST',
