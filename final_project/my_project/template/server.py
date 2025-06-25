@@ -41,42 +41,12 @@ def initialize_db():
     conn.close()
 
 
-@app.get("/data", response_model=List)
+@app.get("/data", response_model=List[DataBase])
 def read_data_items():
     conn = get_db_connection()
-    items = conn.execute("SELECT id FROM data").fetchall()
+    items = conn.execute("SELECT * FROM data").fetchall()
     conn.close()
-    return [item["id"] for item in items]
-
-
-# FastAPIのデコレータ。GETリクエストで "/data/{item_id}"
-# というパスにアクセスがあった場合に、この関数を実行する
-# {item_id} はパスパラメータと呼ばれ、URLの一部として渡される値。
-# 例えば /data/5 にアクセスすると item_id は 5 になる
-@app.get("/data/{item_id}", response_model=DataBase)
-def read_data_item(item_id: int):
-    # データベースへの接続を取得する
-    conn = get_db_connection()
-
-    # TODO: 課題　idに対応するデータを取得するSQLをexecute内に書く
-    # テーブル名は data
-    item = conn.execute("SELECT * FROM data WHERE id = ?", (item_id,)).fetchone()
-    # データベース接続を閉じる (リソースの解放)
-    conn.close()
-
-    # 取得したデータが存在する場合 (itemがNoneでない場合)
-    if item:
-        # APIのレスポンスとして、取得したデータをDataBaseモデルに基づいて返す
-        return DataBase(
-            id=item["id"],  # 取得したデータのid
-            value_1=item["value_1"],  # 取得したデータのvalue_1
-            value_2=item["value_2"],  # 取得したデータのvalue_2
-        )
-
-    # 取得したデータが存在しない場合 (itemがNoneの場合)
-    # HTTPステータスコード404 (Not Found) を返すResponseオブジェクトを生成して返す
-    # これにより、クライアントは指定されたIDのデータが見つからなかったことを知ることができる
-    return Response(status_code=404)
+    return [DataBase(**dict(item)) for item in items]
 
 
 @app.post("/data", response_model=DataBase, status_code=201)
@@ -122,6 +92,14 @@ def read_js():
     return PlainTextResponse(
         content=js_content, status_code=200, media_type="application/javascript"
     )
+
+
+@app.get("/favicon.ico")
+def read_favicon():
+    favicon_path = os.path.join(BASE_DIR, "favicon.ico")
+    with open(favicon_path, "rb") as f:
+        favicon_content = f.read()
+    return Response(content=favicon_content, media_type="image/x-icon")
 
 
 if __name__ == "__main__":
