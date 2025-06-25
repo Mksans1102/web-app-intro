@@ -22,9 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="task-text" style="margin-left:8px;${item.done ? 'text-decoration:line-through;color:#aaa;' : ''}">
                         ${item.task}
                     </span>
-                    <span class="due-text" style="margin-left:16px;color:#ee8320;">
-                        ${item.due ? '期限: ' + item.due : ''}
-                    </span>
+                    ${item.due ? `<span class="due-text" style="margin-left:16px;color:#ee8320;">
+                        期限: ${item.due}
+                    </span>` : ''}
                     <button class="delete-btn" data-id="${item.id}" style="float:right;">削除</button>
                 `;
                 todoList.appendChild(listItem);
@@ -94,3 +94,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // 初期タスクの読み込み
     fetchTodos();
 });
+

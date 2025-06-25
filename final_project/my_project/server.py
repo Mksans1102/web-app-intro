@@ -17,6 +17,7 @@ class TodoItem(BaseModel):
     id: Optional[int] = None
     task: str
     done: bool = False
+    due: Optional[str] = None  # 追加
 
 
 def get_db_connection():
@@ -33,7 +34,8 @@ def initialize_db():
         CREATE TABLE IF NOT EXISTS data (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             task TEXT NOT NULL,
-            done BOOLEAN NOT NULL DEFAULT 0
+            done BOOLEAN NOT NULL DEFAULT 0,
+            due TEXT
         )
         """
     )
@@ -44,9 +46,14 @@ def initialize_db():
 @app.get("/data", response_model=List[TodoItem])
 def read_todos():
     conn = get_db_connection()
-    items = conn.execute("SELECT * FROM data").fetchall()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, task, done, due FROM data")
+    rows = cursor.fetchall()
     conn.close()
-    return [TodoItem(**dict(item)) for item in items]
+    return [
+        TodoItem(id=row["id"], task=row["task"], done=bool(row["done"]), due=row["due"])
+        for row in rows
+    ]
 
 
 @app.post("/data", response_model=TodoItem, status_code=201)
@@ -54,17 +61,14 @@ def create_todo(item: TodoItem):
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO data (task, done) VALUES (?, ?)",
-        (item.task, item.done),
+        "INSERT INTO data (task, done, due) VALUES (?, ?, ?)",
+        (item.task, int(item.done), item.due),
     )
     conn.commit()
     item_id = cursor.lastrowid
     conn.close()
-    return TodoItem(
-        id=item_id,
-        task=item.task,
-        done=item.done,
-    )
+    return TodoItem(id=item_id, task=item.task, done=item.done, due=item.due)
+
 
 @app.delete("/data/{item_id}", status_code=204)
 def delete_todo(item_id: int):
@@ -74,6 +78,7 @@ def delete_todo(item_id: int):
     conn.commit()
     conn.close()
     return Response(status_code=204)
+
 
 @app.patch("/data/{item_id}", response_model=TodoItem)
 def update_todo(item_id: int, item: TodoItem):
@@ -89,6 +94,7 @@ def update_todo(item_id: int, item: TodoItem):
     if updated is None:
         raise HTTPException(status_code=404, detail="Item not found")
     return TodoItem(**dict(updated))
+
 
 # ここから下は書き換えない
 @app.get("/", response_class=HTMLResponse)
