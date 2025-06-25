@@ -36,6 +36,8 @@ function playGame(playerChoiceIndex) {
     // 勝敗判定
     let resultText = '';
 
+
+
     // TODO: 課題
     // ここから先を実装してください
     // どういう手の組み合わせがあるか考えることが必要そう・・・
@@ -44,7 +46,28 @@ function playGame(playerChoiceIndex) {
     // playerChoiceIndexが0のとき =「プレイヤーの手がグー」
     // computerChoiceIndexが2のとき =「コンピューターの手がパー」
 
-    
+
+    // プレイヤーが勝つ場合
+    if (
+        (playerChoiceIndex === 0 && computerChoiceIndex === 1) || // グー vs チョキ
+        (playerChoiceIndex === 1 && computerChoiceIndex === 2) || // チョキ vs パー
+        (playerChoiceIndex === 2 && computerChoiceIndex === 0)    // パー vs グー
+    ) {
+        resultText = RESULTS.WIN;
+    }
+    // プレイヤーが負ける場合
+    else if (
+        (playerChoiceIndex === 0 && computerChoiceIndex === 2) || // グー vs パー
+        (playerChoiceIndex === 1 && computerChoiceIndex === 0) || // チョキ vs グー
+        (playerChoiceIndex === 2 && computerChoiceIndex === 1)    // パー vs チョキ
+    ) {
+        resultText = RESULTS.LOSE;
+    }
+    // あいこの場合は既存のロジックで処理
+    else if (playerChoiceIndex === computerChoiceIndex) {
+        resultText = RESULTS.DRAW;
+    }
+
 
 
     // ここまで

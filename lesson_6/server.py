@@ -19,6 +19,12 @@ async def get_weather():
     return {"weather": forecast}
 
 
+@app.get("/weather-forecast")
+async def weather_forecast():
+    forecast = random.choice(weather_forecasts)
+    return {"weather": forecast}
+
+
 # ここから下は書き換えない
 @app.get("/", response_class=HTMLResponse)
 async def read_html():

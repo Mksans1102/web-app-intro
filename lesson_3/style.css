@@ -1,0 +1,149 @@
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+    animation: fadeIn 2s ease-in-out;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.5em;
+    margin: 20px 0;
+    color: #444;
+    animation: slideInFromTop 1s ease-out;
+}
+
+p {
+    margin: 15px 20px;
+    text-align: justify;
+    animation: fadeInUp 1.5s ease-in-out;
+}
+
+#date {
+    text-align: center;
+    font-style: italic;
+    color: #666;
+    margin-bottom: 20px;
+    animation: fadeIn 2s ease-in-out;
+}
+
+#intro {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    animation: fadeInUp 1.5s ease-in-out;
+}
+
+#dancing-chicken,
+#audience-reaction,
+#narrator-feelings,
+#solo-dance,
+#finale,
+#aftermath {
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    background-color: #fff;
+    border-left: 4px solid #ff9800;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    animation: fadeInUp 1.5s ease-in-out;
+}
+
+video {
+    display: block;
+    margin: 20px auto;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    animation: zoomIn 1.5s ease-in-out;
+}
+
+ol {
+    margin: 20px 40px;
+    padding-left: 20px;
+    background-color: #fff;
+    border-left: 4px solid #4caf50;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    animation: fadeInUp 1.5s ease-in-out;
+}
+
+ol li {
+    margin: 10px 0;
+    animation: fadeInUp 1.5s ease-in-out;
+}
+
+#lessons-intro {
+    font-weight: bold;
+    margin-top: 30px;
+    animation: fadeIn 2s ease-in-out;
+}
+
+#conclusion {
+    font-style: italic;
+    margin-top: 30px;
+    text-align: center;
+    color: #555;
+    animation: fadeIn 2s ease-in-out;
+}
+
+/* アニメーション定義 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInFromTop {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    p,
+    ol {
+        margin: 10px 15px;
+    }
+
+    video {
+        width: 90%;
+    }
+}
