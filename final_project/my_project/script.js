@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const todoList = document.getElementById('todo-list');
     const addTodoForm = document.getElementById('add-todo-form');
     const taskInput = document.getElementById('task');
-    const dueInput = document.getElementById('due');
 
     // タスク一覧を取得して表示する関数
     async function fetchTodos() {
@@ -22,9 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="task-text" style="margin-left:8px;${item.done ? 'text-decoration:line-through;color:#aaa;' : ''}">
                         ${item.task}
                     </span>
-                    ${item.due ? `<span class="due-text" style="margin-left:16px;color:#ee8320;">
-                        期限: ${item.due}
-                    </span>` : ''}
                     <button class="delete-btn" data-id="${item.id}" style="float:right;">削除</button>
                 `;
                 todoList.appendChild(listItem);
@@ -66,12 +62,11 @@ document.addEventListener('DOMContentLoaded', () => {
     addTodoForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         const task = taskInput.value;
-        const due = dueInput.value;
         try {
             const response = await fetch('/data', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ task: task, done: false, due: due }), // 追加
+                body: JSON.stringify({ task: task, done: false }),
             });
 
             if (!response.ok) {
@@ -80,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // フォームをクリア
             taskInput.value = '';
-            dueInput.value = '';
 
             // タスク一覧を再読み込み
             await fetchTodos();
