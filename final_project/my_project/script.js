@@ -1,35 +1,33 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const dataList = document.getElementById('data-list');
-    const addDataForm = document.getElementById('add-data-form');
-    const value1Input = document.getElementById('value1');
-    const value2Input = document.getElementById('value2');
+    const todoList = document.getElementById('todo-list');
+    const addTodoForm = document.getElementById('add-todo-form');
+    const taskInput = document.getElementById('task');
 
-    // データ一覧を取得して表示する関数
-    async function fetchData() {
+    // タスク一覧を取得して表示する関数
+    async function fetchTodos() {
         try {
             const response = await fetch('/data');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            const data = await response.json();
-            dataList.innerHTML = ''; // 既存のリストをクリア
-            data.forEach(item => {
+            const todos = await response.json();
+            todoList.innerHTML = ''; // 既存のリストをクリア
+            todos.forEach(item => {
                 const listItem = document.createElement('li');
-                listItem.textContent = `ID: ${item.id}, 値1: ${item.value_1}, 値2: ${item.value_2 || 'N/A'}`;
-                dataList.appendChild(listItem);
+                listItem.textContent = `ID: ${item.id}, タスク: ${item.task}, 完了: ${item.done ? '✔️' : '❌'}`;
+                todoList.appendChild(listItem);
             });
         } catch (error) {
-            console.error('データの取得に失敗しました:', error);
-            dataList.innerHTML = '<li>データの取得に失敗しました。</li>';
+            console.error('タスクの取得に失敗しました:', error);
+            todoList.innerHTML = '<li>タスクの取得に失敗しました。</li>';
         }
     }
 
-    // データ追加フォームの送信イベントリスナー
-    addDataForm.addEventListener('submit', async (event) => {
+    // タスク追加フォームの送信イベントリスナー
+    addTodoForm.addEventListener('submit', async (event) => {
         event.preventDefault(); // デフォルトのフォーム送信をキャンセル
 
-        const value1 = value1Input.value;
-        const value2 = value2Input.value;
+        const task = taskInput.value;
 
         try {
             const response = await fetch('/data', {
@@ -37,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ value_1: value1, value_2: value2 }),
+                body: JSON.stringify({ task: task, done: false }),
             });
 
             if (!response.ok) {
@@ -45,18 +43,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // フォームをクリア
-            value1Input.value = '';
-            value2Input.value = '';
+            taskInput.value = '';
 
-            // データ一覧を再読み込み
-            await fetchData();
+            // タスク一覧を再読み込み
+            await fetchTodos();
 
         } catch (error) {
-            console.error('データの追加に失敗しました:', error);
-            alert('データの追加に失敗しました。');
+            console.error('タスクの追加に失敗しました:', error);
+            alert('タスクの追加に失敗しました。');
         }
     });
 
-    // 初期データの読み込み
-    fetchData();
+    // 初期タスクの読み込み
+    fetchTodos();
 });

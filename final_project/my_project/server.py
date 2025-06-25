@@ -13,10 +13,10 @@ BASE_DIR = os.path.dirname(__file__)
 DB_PATH = os.path.join(BASE_DIR, "data.db")
 
 
-class DataBase(BaseModel):
+class TodoItem(BaseModel):
     id: Optional[int] = None
-    value_1: str
-    value_2: Optional[str] = None
+    task: str
+    done: bool = False
 
 
 def get_db_connection():
@@ -32,8 +32,8 @@ def initialize_db():
         """
         CREATE TABLE IF NOT EXISTS data (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            value_1 TEXT NOT NULL,
-            value_2 TEXT
+            task TEXT NOT NULL,
+            done BOOLEAN NOT NULL DEFAULT 0
         )
         """
     )
@@ -41,29 +41,29 @@ def initialize_db():
     conn.close()
 
 
-@app.get("/data", response_model=List[DataBase])
-def read_data_items():
+@app.get("/data", response_model=List[TodoItem])
+def read_todos():
     conn = get_db_connection()
     items = conn.execute("SELECT * FROM data").fetchall()
     conn.close()
-    return [DataBase(**dict(item)) for item in items]
+    return [TodoItem(**dict(item)) for item in items]
 
 
-@app.post("/data", response_model=DataBase, status_code=201)
-def create_data_item(item: DataBase):
+@app.post("/data", response_model=TodoItem, status_code=201)
+def create_todo(item: TodoItem):
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO data (value_1, value_2) VALUES (?, ?)",
-        (item.value_1, item.value_2),
+        "INSERT INTO data (task, done) VALUES (?, ?)",
+        (item.task, item.done),
     )
     conn.commit()
     item_id = cursor.lastrowid
     conn.close()
-    return DataBase(
+    return TodoItem(
         id=item_id,
-        value_1=item.value_1,
-        value_2=item.value_2,
+        task=item.task,
+        done=item.done,
     )
 
 
